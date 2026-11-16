@@ -1,0 +1,63 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="Speed.Views.AddRecorderWindow"
+        Title="Add recorder"
+        Width="560" SizeToContent="Height" CanResize="False"
+        WindowStartupLocation="CenterOwner" Background="{StaticResource Panel}">
+  <StackPanel Margin="28" Spacing="22">
+    <TextBlock Text="Add recorder" FontSize="22" FontWeight="SemiBold" />
+
+    <StackPanel Spacing="10">
+      <TextBlock Text="Recorder type" Classes="muted" />
+      <Grid ColumnDefinitions="*,*,*" ColumnSpacing="10">
+        <RadioButton x:Name="KindShogun" Classes="choice" GroupName="kind" IsCheckedChanged="KindChanged">
+          <StackPanel Spacing="4">
+            <TextBlock Text="Shogun" FontSize="15" FontWeight="SemiBold" />
+            <TextBlock Text="USB to RS-422" Classes="muted" FontSize="12" />
+          </StackPanel>
+        </RadioButton>
+        <RadioButton x:Name="KindHyperDeck" Grid.Column="1" Classes="choice" GroupName="kind" IsChecked="True"
+                     IsCheckedChanged="KindChanged">
+          <StackPanel Spacing="4">
+            <TextBlock Text="HyperDeck" FontSize="15" FontWeight="SemiBold" />
+            <TextBlock Text="Ethernet" Classes="muted" FontSize="12" />
+          </StackPanel>
+        </RadioButton>
+        <RadioButton x:Name="KindKiPro" Grid.Column="2" Classes="choice" GroupName="kind" IsCheckedChanged="KindChanged">
+          <StackPanel Spacing="4">
+            <TextBlock Text="Ki Pro" FontSize="15" FontWeight="SemiBold" />
+            <TextBlock Text="Ethernet" Classes="muted" FontSize="12" />
+          </StackPanel>
+        </RadioButton>
+      </Grid>
+    </StackPanel>
+
+    <StackPanel Spacing="8">
+      <TextBlock Text="Name on screen" Classes="muted" />
+      <TextBox x:Name="NameBox" Watermark="For example, Cam A" Height="44" VerticalContentAlignment="Center" />
+    </StackPanel>
+
+    <StackPanel Spacing="8">
+      <TextBlock x:Name="AddressLabel" Text="IP address" Classes="muted" />
+      <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+        <TextBox x:Name="AddressBox" Watermark="For example, 10.0.1.21" Height="44" VerticalContentAlignment="Center"
+                 FontFamily="{StaticResource MonoFont}" />
+        <Grid x:Name="PortRow" ColumnDefinitions="*,Auto" ColumnSpacing="10" IsVisible="False">
+          <ComboBox x:Name="PortBox" HorizontalAlignment="Stretch" Height="44" PlaceholderText="No serial ports found" />
+          <Button Grid.Column="1" Classes="quiet" Content="Rescan" Height="44" Click="RescanPorts" />
+        </Grid>
+        <Button Grid.Column="1" Classes="quiet" Content="Test connection" Height="44" Click="TestConnection" x:Name="TestButton" />
+      </Grid>
+      <TextBlock x:Name="TestResult" FontSize="13" TextWrapping="Wrap" IsVisible="False" />
+    </StackPanel>
+
+    <CheckBox x:Name="GroupBox" IsChecked="True" Content="Include in Record all and Stop all" />
+
+    <TextBlock x:Name="ErrorText" Foreground="{StaticResource AmberText}" FontSize="13" IsVisible="False" TextWrapping="Wrap" />
+
+    <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Right">
+      <Button Classes="quiet" Content="Cancel" Height="44" Padding="20,0" VerticalContentAlignment="Center" Click="Cancel" IsCancel="True" />
+      <Button Classes="primary" Content="Add recorder" Height="44" VerticalContentAlignment="Center" Click="Add" IsDefault="True" />
+    </StackPanel>
+  </StackPanel>
+</Window>

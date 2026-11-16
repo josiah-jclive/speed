@@ -1,0 +1,121 @@
+using System.Collections.Specialized;
+using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
+using Avalonia.Interactivity;
+using Avalonia.Platform;
+using Avalonia.Threading;
+using Speed.Core;
+using Speed.ViewModels;
+
+namespace Speed.Views;
+
+public partial class MainWindow : Window
+{
+    private readonly DispatcherTimer _previewTimer;
+    private bool _closing;
+
+    public MainWindow()
+    {
+        InitializeComponent();
+        _previewTimer = new DispatcherTimer(TimeSpan.FromMilliseconds(200), DispatcherPriority.Background,
+            (_, _) => Preview.InvalidateVisual());
+        _previewTimer.Start();
+        AppLog.Entries.CollectionChanged += OnLogChanged;
+    }
+
+    private MainViewModel? Model => DataContext as MainViewModel;
+
+    protected override void OnDataContextChanged(EventArgs e)
+    {
+        base.OnDataContextChanged(e);
+        if (Model is { } vm)
+        {
+            Preview.Source = vm;
+            vm.IconLevelChanged += SetIcon;
+        }
+    }
+
+    /// <summary>Taskbar icon: white dot when ready, red while recording, amber when something needs attention.</summary>
+    private void SetIcon(StatusLevel level)
+    {
+        var name = level switch
+        {
+            StatusLevel.Recording => "recording",
+            StatusLevel.Attention => "attention",
+            _ => "ready",
+        };
+        try
+        {
+            using var stream = AssetLoader.Open(new Uri($"avares://JSPEED/Assets/Icons/state-{name}.png"));
+            Icon = new WindowIcon(stream);
+        }
+        catch
+        {
+            // Keep the previous icon if the asset can't be loaded.
+        }
+    }
+
+    private void OnLogChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        if (e.Action == NotifyCollectionChangedAction.Add)
+            Dispatcher.UIThread.Post(() => LogScroll.ScrollToEnd(), DispatcherPriority.Background);
+    }
+
+    private async void OpenSettings(object? sender, RoutedEventArgs e)
+    {
+        if (Model is not { } vm) return;
+        await new SettingsWindow(vm).ShowDialog(this);
+        vm.SaveSettings();
+    }
+
+    private async void AddRecorder(object? sender, RoutedEventArgs e)
+    {
+        if (Model is not { } vm) return;
+        var config = await new AddRecorderWindow().ShowDialog<RecorderConfig?>(this);
+        if (config != null) vm.AddRecorder(config);
+    }
+
+    private void ShowMore(object? sender, RoutedEventArgs e)
+    {
+        if (sender is not Button { Tag: Recorder recorder } button) return;
+        var format = new MenuItem { Header = "Format media…" };
+        format.Click += async (_, _) => await FormatMediaAsync(recorder);
+        var remove = new MenuItem { Header = "Remove recorder" };
+        remove.Click += async (_, _) => await RemoveRecorderAsync(recorder);
+        var menu = new MenuFlyout { Placement = PlacementMode.BottomEdgeAlignedRight };
+        menu.Items.Add(format);
+        menu.Items.Add(remove);
+        menu.ShowAt(button);
+    }
+
+    private async Task FormatMediaAsync(Recorder recorder)
+    {
+        if (Model is not { } vm) return;
+        await new FormatWindow(vm.Recorders, recorder).ShowDialog(this);
+    }
+
+    private async Task RemoveRecorderAsync(Recorder recorder)
+    {
+        if (Model is not { } vm) return;
+        if (recorder.IsRecording)
+        {
+            AppLog.Warn($"{recorder.Name} is recording. Stop it before removing it.");
+            return;
+        }
+        await vm.RemoveRecorderCommand.ExecuteAsync(recorder);
+    }
+
+    protected override async void OnClosing(WindowClosingEventArgs e)
+    {
+        base.OnClosing(e);
+        if (_closing || Model is not { } vm) return;
+        e.Cancel = true;
+        _closing = true;
+        _previewTimer.Stop();
+        AppLog.Entries.CollectionChanged -= OnLogChanged;
+        if (vm.Status.Recording > 0)
+            AppLog.Warn("JSPEED closed while recorders were recording. Closing doesn't stop them.");
+        await vm.ShutdownAsync();
+        Close();
+    }
+}
