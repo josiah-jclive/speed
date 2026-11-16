@@ -67,7 +67,7 @@
             <Ellipse Width="8" Height="8" Classes="link" Classes.online="{Binding OutputHealthy}" />
             <TextBlock Text="{Binding OutputStatus}" Classes="muted" />
           </StackPanel>
-          <Button Classes="icon" Width="36" Height="36" Click="OpenSettings" ToolTip.Tip="Settings"
+          <Button Classes="icon" Width="36" Height="36" Click="OpenSettings"
                   AutomationProperties.Name="Settings">
             <Path Stroke="{StaticResource Text}" StrokeThickness="1.8" StrokeLineCap="Round" Width="18" Height="18" Stretch="Uniform"
                   Data="M4 7 H14 M18 7 H20 M4 17 H8 M12 17 H20 M18 7 A2 2 0 1 1 14 7 A2 2 0 1 1 18 7 M12 17 A2 2 0 1 1 8 17 A2 2 0 1 1 12 17" />
@@ -141,7 +141,7 @@
           </StackPanel>
         </Border>
 
-        <ScrollViewer Grid.Row="1" IsVisible="{Binding !HasNoRecorders}">
+        <ScrollViewer Grid.Row="1" IsVisible="{Binding !HasNoRecorders}" HorizontalScrollBarVisibility="Disabled">
           <ItemsControl ItemsSource="{Binding Recorders}">
             <ItemsControl.ItemsPanel>
               <ItemsPanelTemplate>
@@ -257,7 +257,7 @@
 
         <TextBlock Grid.Row="2" Text="Activity" Classes="h2" Margin="0,6,0,0" />
         <Border Grid.Row="3" Classes="card" Padding="16,12">
-          <ScrollViewer x:Name="LogScroll">
+          <ScrollViewer x:Name="LogScroll" HorizontalScrollBarVisibility="Disabled">
             <ItemsControl ItemsSource="{Binding Log}">
               <ItemsControl.ItemTemplate>
                 <DataTemplate x:DataType="core:LogEntry">
