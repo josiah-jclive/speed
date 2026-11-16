@@ -1,0 +1,91 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:views="using:Speed.Views"
+        x:Class="Speed.Views.FormatWindow"
+        Title="Format media"
+        Width="640" Height="700" CanResize="False"
+        WindowStartupLocation="CenterOwner" Background="{StaticResource Panel}">
+  <Grid RowDefinitions="Auto,*,Auto" Margin="28" RowSpacing="20">
+
+    <StackPanel Spacing="16">
+      <TextBlock Text="Format media" FontSize="22" FontWeight="SemiBold" />
+      <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8">
+        <StackPanel Spacing="6">
+          <Border x:Name="Bar1" Height="4" CornerRadius="2" />
+          <TextBlock x:Name="Label1" Text="1. Choose the drive" FontSize="13" />
+        </StackPanel>
+        <StackPanel Grid.Column="1" Spacing="6">
+          <Border x:Name="Bar2" Height="4" CornerRadius="2" />
+          <TextBlock x:Name="Label2" Text="2. Check what’s on it" FontSize="13" />
+        </StackPanel>
+        <StackPanel Grid.Column="2" Spacing="6">
+          <Border x:Name="Bar3" Height="4" CornerRadius="2" />
+          <TextBlock x:Name="Label3" Text="3. Hold to format" FontSize="13" />
+        </StackPanel>
+      </Grid>
+    </StackPanel>
+
+    <Panel Grid.Row="1">
+      <!-- Step 1 -->
+      <Grid x:Name="Step1" RowDefinitions="Auto,*,Auto" RowSpacing="10">
+        <TextBlock Text="Which drive do you want to erase?" Classes="muted" FontSize="14" />
+        <ScrollViewer Grid.Row="1">
+          <StackPanel x:Name="DriveList" Spacing="8" />
+        </ScrollViewer>
+        <TextBlock Grid.Row="2" x:Name="UnavailableText" Classes="muted" TextWrapping="Wrap" LineHeight="20" />
+      </Grid>
+
+      <!-- Step 2 -->
+      <StackPanel x:Name="Step2" Spacing="20" IsVisible="False">
+        <Border Background="{StaticResource Panel2}" BorderBrush="#343B47" BorderThickness="1" CornerRadius="12" Padding="18,16">
+          <Grid ColumnDefinitions="110,*" RowDefinitions="Auto,Auto,Auto" RowSpacing="10">
+            <TextBlock Text="Recorder" Classes="muted" FontSize="14" />
+            <TextBlock Grid.Column="1" x:Name="SumRecorder" />
+            <TextBlock Grid.Row="1" Text="Drive" Classes="muted" FontSize="14" />
+            <TextBlock Grid.Row="1" Grid.Column="1" x:Name="SumDrive" />
+            <TextBlock Grid.Row="2" Text="On it now" Classes="muted" FontSize="14" />
+            <TextBlock Grid.Row="2" Grid.Column="1" x:Name="SumContents" />
+          </Grid>
+        </Border>
+
+        <StackPanel Orientation="Horizontal" Spacing="10">
+          <TextBlock Text="Format as" Classes="muted" FontSize="14" VerticalAlignment="Center" Margin="0,0,6,0" />
+          <StackPanel x:Name="FileSystemList" Orientation="Horizontal" Spacing="10" />
+        </StackPanel>
+
+        <StackPanel Spacing="8">
+          <TextBlock x:Name="ConfirmLabel" TextWrapping="Wrap" />
+          <TextBox x:Name="ConfirmBox" Height="44" VerticalContentAlignment="Center" FontFamily="{StaticResource MonoFont}"
+                   TextChanged="ConfirmChanged" />
+          <TextBlock x:Name="ConfirmMatch" Text="Name matches" Foreground="{StaticResource Green}" FontSize="13" IsVisible="False" />
+        </StackPanel>
+
+        <CheckBox x:Name="AckBox" IsCheckedChanged="AckChanged">
+          <TextBlock x:Name="AckText" TextWrapping="Wrap" />
+        </CheckBox>
+      </StackPanel>
+
+      <!-- Step 3 -->
+      <StackPanel x:Name="Step3" Spacing="18" IsVisible="False" VerticalAlignment="Center">
+        <Path Data="M12 3 L2 20 H22 Z M12 10 V14 M12 17.5 V18" Stroke="{StaticResource Amber}" StrokeThickness="1.8"
+              StrokeLineCap="Round" StrokeJoin="Round" Width="52" Height="52" Stretch="Uniform" HorizontalAlignment="Center" />
+        <TextBlock x:Name="EraseTitle" FontSize="26" FontWeight="SemiBold" TextAlignment="Center" TextWrapping="Wrap" />
+        <TextBlock x:Name="EraseText" FontSize="15" Foreground="#B4BCC8" TextAlignment="Center" TextWrapping="Wrap"
+                   MaxWidth="460" LineHeight="22" />
+        <views:HoldButton x:Name="Hold" Margin="0,10,0,0" />
+        <TextBlock x:Name="HoldHint" Classes="muted" TextAlignment="Center"
+                   Text="Press and hold for 3 seconds, or hold the F key. Let go to cancel." />
+        <TextBlock x:Name="ResultText" FontSize="15" TextAlignment="Center" TextWrapping="Wrap" IsVisible="False" />
+      </StackPanel>
+    </Panel>
+
+    <Grid Grid.Row="2" ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="10">
+      <Button x:Name="BackButton" Classes="quiet" Content="Back" Height="44" Padding="20,0" VerticalContentAlignment="Center"
+              Click="Back" IsVisible="False" />
+      <Button Grid.Column="2" x:Name="CancelButton" Classes="quiet" Content="Cancel" Height="44" Padding="20,0"
+              VerticalContentAlignment="Center" Click="Cancel" IsCancel="True" />
+      <Button Grid.Column="3" x:Name="NextButton" Classes="primary" Content="Next" Height="44" VerticalContentAlignment="Center"
+              Click="Next" IsEnabled="False" />
+    </Grid>
+  </Grid>
+</Window>

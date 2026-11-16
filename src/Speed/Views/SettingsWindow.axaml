@@ -1,0 +1,118 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:core="using:Speed.Core"
+        x:Class="Speed.Views.SettingsWindow"
+        x:DataType="core:AppSettings"
+        Title="Settings"
+        Width="880" Height="760" MinWidth="760" MinHeight="600"
+        WindowStartupLocation="CenterOwner" Background="{StaticResource Panel}">
+  <Grid ColumnDefinitions="210,*">
+
+    <!-- Sidebar -->
+    <Border Background="{StaticResource Sidebar}" BorderBrush="{StaticResource Line}" BorderThickness="0,0,1,0" Padding="12,24">
+      <Grid RowDefinitions="Auto,*,Auto">
+        <TextBlock Text="Settings" FontSize="20" FontWeight="SemiBold" Margin="12,0,0,16" />
+        <ListBox Grid.Row="1" x:Name="Nav" Classes="nav" SelectedIndex="0" SelectionChanged="NavChanged">
+          <ListBoxItem Content="General" />
+          <ListBoxItem Content="Program output" />
+          <ListBoxItem Content="Media warnings" />
+          <ListBoxItem Content="Keyboard shortcuts" />
+        </ListBox>
+        <StackPanel Grid.Row="2" HorizontalAlignment="Center" Spacing="6">
+          <Image Source="avares://JSPEED/Assets/jspeed-by-jc-live.png" Width="170" />
+          <StackPanel Orientation="Horizontal" Spacing="5" HorizontalAlignment="Center">
+            <TextBlock Text="JSPEED" FontFamily="{StaticResource BrandFont}" FontWeight="SemiBold" FontSize="12"
+                       Foreground="{StaticResource Text2}" LetterSpacing="0.24" />
+            <TextBlock x:Name="VersionText" Text="1.0" FontSize="12" Foreground="{StaticResource Dim}" />
+          </StackPanel>
+        </StackPanel>
+      </Grid>
+    </Border>
+
+    <Grid Grid.Column="1" RowDefinitions="*,Auto">
+      <ScrollViewer Padding="32,28">
+        <Panel>
+
+          <!-- General -->
+          <StackPanel x:Name="GeneralPage" Spacing="26">
+            <TextBlock Text="General" FontSize="22" FontWeight="SemiBold" />
+            <StackPanel Spacing="8">
+              <TextBlock Text="Name on output" FontWeight="Medium" />
+              <TextBox Text="{Binding ProductionName}" Height="44" VerticalContentAlignment="Center" Watermark="For example, Google Fiber Symposium 2027" />
+              <TextBlock Classes="muted" TextWrapping="Wrap"
+                         Text="Shown at the top of the program output and in the title bar. Leave it blank to show only the take length." />
+            </StackPanel>
+            <StackPanel Spacing="10">
+              <TextBlock Text="Also show on output" FontWeight="Medium" />
+              <CheckBox IsChecked="{Binding ShowTakeLength}" Content="Take length" />
+              <CheckBox IsChecked="{Binding ShowTimeOfDay}" Content="Time of day" />
+              <CheckBox IsChecked="{Binding ShowDate}" Content="Today’s date" />
+            </StackPanel>
+            <Border Height="1" Background="{StaticResource Line}" />
+            <StackPanel Spacing="10">
+              <TextBlock Text="Record safety" FontWeight="Medium" />
+              <CheckBox IsChecked="{Binding RequireArm}" Content="Require Arm before Record all" />
+              <CheckBox IsChecked="{Binding DisarmAfterStop}" Content="Disarm after Stop all" />
+              <StackPanel Orientation="Horizontal" Spacing="10">
+                <TextBlock Text="Warn if a recorder hasn’t started after" VerticalAlignment="Center" />
+                <NumericUpDown Value="{Binding StartCheckSeconds}" Minimum="1" Maximum="10" Increment="1" FormatString="0" Width="110" />
+                <TextBlock Text="seconds" VerticalAlignment="Center" />
+              </StackPanel>
+            </StackPanel>
+          </StackPanel>
+
+          <!-- Program output -->
+          <StackPanel x:Name="OutputPage" Spacing="20" IsVisible="False">
+            <TextBlock Text="Program output" FontSize="22" FontWeight="SemiBold" />
+            <TextBlock Classes="muted" FontSize="14" TextWrapping="Wrap"
+                       Text="Choose the UltraStudio and its video format in the Program output panel of the main window. The graphic lays itself out by recorder count: full-width rows up to 6, two columns for 7 or 8, three columns for 9 to 12." />
+            <CheckBox IsChecked="{Binding StartOutputOnLaunch}" Content="Start output when JSPEED opens" />
+            <TextBlock Classes="muted" TextWrapping="Wrap"
+                       Text="Needs Blackmagic Desktop Video installed. JSPEED sends 8-bit video, so pick the format your monitor or multiviewer expects." />
+          </StackPanel>
+
+          <!-- Media warnings -->
+          <StackPanel x:Name="WarningsPage" Spacing="20" IsVisible="False">
+            <TextBlock Text="Media warnings" FontSize="22" FontWeight="SemiBold" />
+            <TextBlock Classes="muted" FontSize="14" TextWrapping="Wrap"
+                       Text="A recorder turns amber, and the app icon too, when its media drops below these levels. HyperDecks report time left; Ki Pros report free space as a percentage; Shoguns don’t report media over RS-422." />
+            <StackPanel Orientation="Horizontal" Spacing="10">
+              <TextBlock Text="Warn below" VerticalAlignment="Center" Width="96" />
+              <NumericUpDown Value="{Binding LowMediaMinutes}" Minimum="1" Maximum="240" Increment="1" FormatString="0" Width="120" />
+              <TextBlock Text="minutes left (HyperDeck)" VerticalAlignment="Center" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Spacing="10">
+              <TextBlock Text="Warn below" VerticalAlignment="Center" Width="96" />
+              <NumericUpDown Value="{Binding LowMediaPercent}" Minimum="1" Maximum="90" Increment="1" FormatString="0" Width="120" />
+              <TextBlock Text="percent free (Ki Pro)" VerticalAlignment="Center" />
+            </StackPanel>
+          </StackPanel>
+
+          <!-- Shortcuts -->
+          <StackPanel x:Name="ShortcutsPage" Spacing="16" IsVisible="False">
+            <TextBlock Text="Keyboard shortcuts" FontSize="22" FontWeight="SemiBold" />
+            <Grid ColumnDefinitions="90,*" RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="12">
+              <TextBlock Text="F7" Classes="mono" />
+              <TextBlock Grid.Column="1" Text="Arm or disarm record" />
+              <TextBlock Grid.Row="1" Text="F9" Classes="mono" />
+              <TextBlock Grid.Row="1" Grid.Column="1" Text="Record all (when armed)" />
+              <TextBlock Grid.Row="2" Text="F8" Classes="mono" />
+              <TextBlock Grid.Row="2" Grid.Column="1" Text="Stop all" />
+              <TextBlock Grid.Row="3" Text="Hold F" Classes="mono" />
+              <TextBlock Grid.Row="3" Grid.Column="1" Text="Confirm a format, on its last step" />
+            </Grid>
+            <TextBlock Classes="muted" TextWrapping="Wrap"
+                       Text="On a Mac keyboard, hold fn with the function keys unless they're set to work as standard function keys." />
+          </StackPanel>
+        </Panel>
+      </ScrollViewer>
+
+      <Border Grid.Row="1" BorderBrush="{StaticResource Line}" BorderThickness="0,1,0,0" Padding="32,18">
+        <Grid ColumnDefinitions="*,Auto">
+          <TextBlock Text="Changes apply right away." Classes="muted" VerticalAlignment="Center" />
+          <Button Grid.Column="1" Classes="primary" Content="Done" Click="Done" IsDefault="True" />
+        </Grid>
+      </Border>
+    </Grid>
+  </Grid>
+</Window>
