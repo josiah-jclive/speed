@@ -1,0 +1,9 @@
+bin/
+obj/
+out/
+artifacts/
+native/build/
+*.user
+.vs/
+.idea/
+.DS_Store
