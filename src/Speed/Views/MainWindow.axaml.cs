@@ -64,6 +64,7 @@ public partial class MainWindow : Window
     private async void OpenSettings(object? sender, RoutedEventArgs e)
     {
         if (Model is not { } vm) return;
+        if (sender is Control c) ToolTip.SetIsOpen(c, false);
         await new SettingsWindow(vm).ShowDialog(this);
         vm.SaveSettings();
     }
@@ -78,6 +79,7 @@ public partial class MainWindow : Window
     private void ShowMore(object? sender, RoutedEventArgs e)
     {
         if (sender is not Button { Tag: Recorder recorder } button) return;
+        ToolTip.SetIsOpen(button, false);
         var format = new MenuItem { Header = "Format media…" };
         format.Click += async (_, _) => await FormatMediaAsync(recorder);
         var remove = new MenuItem { Header = "Remove recorder" };

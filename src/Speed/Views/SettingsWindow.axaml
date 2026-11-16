@@ -30,8 +30,8 @@
     </Border>
 
     <Grid Grid.Column="1" RowDefinitions="*,Auto">
-      <ScrollViewer Padding="32,28">
-        <Panel>
+      <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+        <Panel Margin="32,28">
 
           <!-- General -->
           <StackPanel x:Name="GeneralPage" Spacing="26">
