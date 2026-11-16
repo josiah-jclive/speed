@@ -10,7 +10,7 @@ Runs on Windows (.exe) and macOS (.dmg) from one C# codebase built with [Avaloni
 
 | Recorder | Connection | Record/stop | Timecode | Media left | Format |
 | --- | --- | --- | --- | --- | --- |
-| Atomos Shogun (Studio II and others) | USB to RS-422 adapter, Sony 9-pin | Yes | Yes | No (not in the protocol) | No (format on the unit) |
+| Atomos Shogun (Studio II and others), 1 to 4 record channels per cable | USB to RS-422 adapter, Sony 9-pin | Yes | Yes | No (not in the protocol) | No (format on the unit) |
 | Blackmagic HyperDeck | Ethernet, TCP 9993 | Yes | Yes | Time left per slot | Yes (exFAT or HFS+) |
 | AJA Ki Pro | Ethernet, HTTP | Yes, if the unit lists the commands | Yes | Percent free | No (format from its web page) |
 
@@ -82,6 +82,8 @@ Without the bridge library, everything works except UltraStudio output, which sa
 - **Shoguns:** an FTDI-based USB to RS-422 adapter needs no driver on macOS or Windows 10/11. Use a cable
   wired as the controller side of Sony 9-pin (TX and RX pairs crossed relative to a deck-to-deck cable),
   and turn on RS-422 remote control in AtomOS. On a Mac, pick the `cu.usbserial-…` port.
+  When a Shogun records several channels over one cable, choose 1 to 4 channels when adding it and name each one.
+  Every channel gets its own card and output tile; they share the cable, so they start, stop and show timecode together.
 - **HyperDecks:** turn on remote control (Setup menu, or JSPEED sends `remote: enable: true` when it connects).
 - **Ki Pros:** same network as the computer; nothing to enable beyond its web interface.
 

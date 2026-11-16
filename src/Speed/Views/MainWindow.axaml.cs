@@ -103,8 +103,10 @@ public partial class MainWindow : Window
     private async void AddRecorder(object? sender, RoutedEventArgs e)
     {
         if (Model is not { } vm) return;
-        var config = await new AddRecorderWindow().ShowDialog<RecorderConfig?>(this);
-        if (config != null) vm.AddRecorder(config);
+        // A multi-channel Shogun comes back as one config per channel.
+        var configs = await new AddRecorderWindow().ShowDialog<List<RecorderConfig>?>(this);
+        if (configs == null) return;
+        foreach (var config in configs) vm.AddRecorder(config);
     }
 
     private void ShowMore(object? sender, RoutedEventArgs e)
