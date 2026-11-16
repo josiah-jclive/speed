@@ -1,0 +1,239 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <Styles.Resources>
+    <Color x:Key="GroundColor">#181C22</Color>
+    <SolidColorBrush x:Key="Ground" Color="#181C22" />
+    <SolidColorBrush x:Key="Sidebar" Color="#1B1F26" />
+    <SolidColorBrush x:Key="Panel" Color="#20252D" />
+    <SolidColorBrush x:Key="Panel2" Color="#262C35" />
+    <SolidColorBrush x:Key="Field" Color="#181C22" />
+    <SolidColorBrush x:Key="Line" Color="#2E3540" />
+    <SolidColorBrush x:Key="Line2" Color="#3A4250" />
+    <SolidColorBrush x:Key="Text" Color="#ECEEF1" />
+    <SolidColorBrush x:Key="Text2" Color="#C3C9D3" />
+    <SolidColorBrush x:Key="Muted" Color="#9AA3B2" />
+    <SolidColorBrush x:Key="Dim" Color="#8B94A3" />
+    <SolidColorBrush x:Key="Rec" Color="#E5484D" />
+    <SolidColorBrush x:Key="RecBg" Color="#3A1519" />
+    <SolidColorBrush x:Key="RecSub" Color="#E2B8BB" />
+    <SolidColorBrush x:Key="Amber" Color="#F5A524" />
+    <SolidColorBrush x:Key="AmberBg" Color="#2A2113" />
+    <SolidColorBrush x:Key="AmberText" Color="#FFC266" />
+    <SolidColorBrush x:Key="AmberSub" Color="#E3C79A" />
+    <SolidColorBrush x:Key="OnAmber" Color="#1A1306" />
+    <SolidColorBrush x:Key="Green" Color="#46C37B" />
+    <SolidColorBrush x:Key="Blue" Color="#7AA7FF" />
+    <SolidColorBrush x:Key="BlueBg" Color="#1E2A40" />
+    <SolidColorBrush x:Key="OnBlue" Color="#0E1A2E" />
+
+    <FontFamily x:Key="SansFont">avares://JSPEED/Assets/Fonts#Geist</FontFamily>
+    <FontFamily x:Key="MonoFont">avares://JSPEED/Assets/Fonts#Geist Mono</FontFamily>
+    <FontFamily x:Key="BrandFont">avares://JSPEED/Assets/Fonts#Poppins</FontFamily>
+
+    <!-- Fluent accent so checkboxes, focus and selection pick up SPEED's blue. -->
+    <Color x:Key="SystemAccentColor">#7AA7FF</Color>
+    <Color x:Key="SystemAccentColorLight1">#94B9FF</Color>
+    <Color x:Key="SystemAccentColorDark1">#5F8FE6</Color>
+  </Styles.Resources>
+
+  <Style Selector="Window">
+    <Setter Property="Background" Value="{StaticResource Ground}" />
+    <Setter Property="Foreground" Value="{StaticResource Text}" />
+    <Setter Property="FontFamily" Value="{StaticResource SansFont}" />
+    <Setter Property="FontSize" Value="14" />
+  </Style>
+
+  <Style Selector="TextBlock.muted">
+    <Setter Property="Foreground" Value="{StaticResource Muted}" />
+    <Setter Property="FontSize" Value="13" />
+  </Style>
+  <Style Selector="TextBlock.h2">
+    <Setter Property="FontSize" Value="15" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+    <Setter Property="Foreground" Value="{StaticResource Text2}" />
+  </Style>
+  <Style Selector="TextBlock.mono">
+    <Setter Property="FontFamily" Value="{StaticResource MonoFont}" />
+  </Style>
+
+  <Style Selector="Border.card">
+    <Setter Property="Background" Value="{StaticResource Panel}" />
+    <Setter Property="BorderBrush" Value="{StaticResource Line}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="CornerRadius" Value="14" />
+  </Style>
+
+  <!-- Buttons -->
+  <Style Selector="Button">
+    <Setter Property="CornerRadius" Value="9" />
+    <Setter Property="FontFamily" Value="{StaticResource SansFont}" />
+  </Style>
+
+  <Style Selector="Button.quiet">
+    <Setter Property="Background" Value="{StaticResource Panel2}" />
+    <Setter Property="BorderBrush" Value="{StaticResource Line2}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="Foreground" Value="{StaticResource Text}" />
+    <Setter Property="Padding" Value="14,8" />
+  </Style>
+
+  <Style Selector="Button.primary">
+    <Setter Property="Background" Value="{StaticResource Blue}" />
+    <Setter Property="Foreground" Value="{StaticResource OnBlue}" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+    <Setter Property="Padding" Value="20,11" />
+    <Setter Property="CornerRadius" Value="10" />
+  </Style>
+  <Style Selector="Button.primary:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background" Value="#94B9FF" />
+    <Setter Property="Foreground" Value="{StaticResource OnBlue}" />
+  </Style>
+
+  <Style Selector="Button.big">
+    <Setter Property="Height" Value="64" />
+    <Setter Property="Padding" Value="28,0" />
+    <Setter Property="CornerRadius" Value="12" />
+    <Setter Property="FontSize" Value="18" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+  </Style>
+
+  <Style Selector="Button.record">
+    <Setter Property="Background" Value="{StaticResource Rec}" />
+    <Setter Property="Foreground" Value="White" />
+  </Style>
+  <Style Selector="Button.record:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background" Value="#EE5F63" />
+    <Setter Property="Foreground" Value="White" />
+  </Style>
+  <Style Selector="Button.record:pressed /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background" Value="#C9353A" />
+  </Style>
+  <Style Selector="Button.record:disabled /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background" Value="#3A2126" />
+    <Setter Property="Foreground" Value="#C99BA0" />
+  </Style>
+
+  <Style Selector="Button.stop">
+    <Setter Property="Background" Value="{StaticResource Panel2}" />
+    <Setter Property="BorderBrush" Value="{StaticResource Line2}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="Foreground" Value="{StaticResource Text}" />
+  </Style>
+
+  <Style Selector="Button.icon">
+    <Setter Property="Width" Value="38" />
+    <Setter Property="Height" Value="38" />
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="HorizontalContentAlignment" Value="Center" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+    <Setter Property="Background" Value="{StaticResource Panel2}" />
+    <Setter Property="BorderBrush" Value="{StaticResource Line}" />
+    <Setter Property="BorderThickness" Value="1" />
+  </Style>
+
+  <!-- Recorder cards change with state. -->
+  <Style Selector="Border.recorder">
+    <Setter Property="Background" Value="{StaticResource Panel}" />
+    <Setter Property="BorderBrush" Value="{StaticResource Line}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="CornerRadius" Value="14" />
+    <Setter Property="Padding" Value="20,18" />
+  </Style>
+  <Style Selector="Border.recorder.recording">
+    <Setter Property="Background" Value="{StaticResource RecBg}" />
+    <Setter Property="BorderBrush" Value="{StaticResource Rec}" />
+  </Style>
+  <Style Selector="Border.recorder.failed">
+    <Setter Property="Background" Value="{StaticResource AmberBg}" />
+    <Setter Property="BorderBrush" Value="{StaticResource Amber}" />
+  </Style>
+
+  <Style Selector="Border.pill">
+    <Setter Property="CornerRadius" Value="999" />
+    <Setter Property="Padding" Value="11,5" />
+    <Setter Property="Background" Value="{StaticResource Line}" />
+  </Style>
+  <Style Selector="Border.pill > TextBlock">
+    <Setter Property="FontSize" Value="13" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+    <Setter Property="Foreground" Value="{StaticResource Text2}" />
+  </Style>
+  <Style Selector="Border.pill.recording">
+    <Setter Property="Background" Value="{StaticResource Rec}" />
+  </Style>
+  <Style Selector="Border.pill.recording > TextBlock">
+    <Setter Property="Foreground" Value="White" />
+  </Style>
+  <Style Selector="Border.pill.failed">
+    <Setter Property="Background" Value="{StaticResource Amber}" />
+  </Style>
+  <Style Selector="Border.pill.failed > TextBlock">
+    <Setter Property="Foreground" Value="{StaticResource OnAmber}" />
+  </Style>
+
+  <!-- Status strip -->
+  <Style Selector="Border.strip">
+    <Setter Property="BorderBrush" Value="#2A303A" />
+    <Setter Property="BorderThickness" Value="0,0,0,1" />
+    <Setter Property="Padding" Value="24,22" />
+  </Style>
+  <Style Selector="Border.strip.attention">
+    <Setter Property="Background" Value="{StaticResource AmberBg}" />
+    <Setter Property="BorderBrush" Value="#5A3A12" />
+  </Style>
+  <Style Selector="Border.strip.recording">
+    <Setter Property="Background" Value="#2B1215" />
+    <Setter Property="BorderBrush" Value="#6A2227" />
+  </Style>
+
+  <!-- Thin media bar -->
+  <Style Selector="ProgressBar.media">
+    <Setter Property="Height" Value="4" />
+    <Setter Property="MinHeight" Value="4" />
+    <Setter Property="CornerRadius" Value="2" />
+    <Setter Property="Background" Value="{StaticResource Line}" />
+    <Setter Property="Foreground" Value="{StaticResource Blue}" />
+    <Setter Property="Minimum" Value="0" />
+    <Setter Property="Maximum" Value="1" />
+  </Style>
+  <Style Selector="ProgressBar.media.low">
+    <Setter Property="Foreground" Value="{StaticResource Amber}" />
+  </Style>
+
+  <!-- Choice cards (recorder type, file system) -->
+  <Style Selector="RadioButton.choice">
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border Name="Card" Background="{StaticResource Panel2}" BorderBrush="#343B47" BorderThickness="1"
+                CornerRadius="12" Padding="14,12">
+          <ContentPresenter Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" />
+        </Border>
+      </ControlTemplate>
+    </Setter>
+    <Setter Property="Cursor" Value="Hand" />
+    <Setter Property="HorizontalAlignment" Value="Stretch" />
+  </Style>
+  <Style Selector="RadioButton.choice:checked /template/ Border#Card">
+    <Setter Property="Background" Value="{StaticResource BlueBg}" />
+    <Setter Property="BorderBrush" Value="{StaticResource Blue}" />
+    <Setter Property="BorderThickness" Value="2" />
+  </Style>
+  <Style Selector="RadioButton.choice:disabled /template/ Border#Card">
+    <Setter Property="Opacity" Value="0.6" />
+  </Style>
+  <Style Selector="RadioButton.choice:focus-visible /template/ Border#Card">
+    <Setter Property="BorderBrush" Value="{StaticResource Blue}" />
+  </Style>
+
+  <!-- Settings sidebar -->
+  <Style Selector="ListBox.nav">
+    <Setter Property="Background" Value="Transparent" />
+  </Style>
+  <Style Selector="ListBox.nav ListBoxItem">
+    <Setter Property="CornerRadius" Value="8" />
+    <Setter Property="Padding" Value="12,10" />
+    <Setter Property="Margin" Value="0,0,0,4" />
+  </Style>
+</Styles>
