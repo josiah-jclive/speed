@@ -3,6 +3,7 @@
         xmlns:vm="using:Speed.ViewModels"
         xmlns:core="using:Speed.Core"
         xmlns:out="using:Speed.Output"
+        xmlns:views="using:Speed.Views"
         x:Class="Speed.Views.MainWindow"
         x:DataType="vm:MainViewModel"
         Title="JSPEED"
@@ -12,7 +13,6 @@
 
   <Window.KeyBindings>
     <KeyBinding Gesture="F7" Command="{Binding ToggleArmCommand}" />
-    <KeyBinding Gesture="F8" Command="{Binding StopAllCommand}" />
     <KeyBinding Gesture="F9" Command="{Binding RecordAllCommand}" />
   </Window.KeyBindings>
 
@@ -106,13 +106,8 @@
               <TextBlock Text="F9" FontSize="12" FontWeight="Medium" Opacity="0.85" VerticalAlignment="Center" />
             </StackPanel>
           </Button>
-          <Button Classes="big stop" Command="{Binding StopAllCommand}" AutomationProperties.Name="Stop all">
-            <StackPanel Orientation="Horizontal" Spacing="12">
-              <Rectangle Width="14" Height="14" RadiusX="3" RadiusY="3" Fill="{StaticResource Text}" VerticalAlignment="Center" />
-              <TextBlock Text="Stop all" VerticalAlignment="Center" />
-              <TextBlock Text="F8" FontSize="12" FontWeight="Medium" Foreground="{StaticResource Dim}" VerticalAlignment="Center" />
-            </StackPanel>
-          </Button>
+          <!-- Stop all is press and hold, so a stray click can't end a take. Set up in code-behind. -->
+          <views:HoldButton x:Name="StopHold" Height="64" Width="250" CornerRadius="12" BorderThickness="1" />
         </StackPanel>
       </Grid>
     </Border>

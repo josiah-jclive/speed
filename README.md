@@ -16,7 +16,8 @@ Runs on Windows (.exe) and macOS (.dmg) from one C# codebase built with [Avaloni
 
 ## Features
 
-- **Record all / Stop all** with an arm switch (F7, F9, F8). Two seconds after Record all, JSPEED checks
+- **Record all / Stop all** with an arm switch (F7 arms, F9 records). Stop all is press and hold for 1.5 seconds
+  and has no shortcut, so a stray click or key can't end a take. Two seconds after Record all, JSPEED checks
   every recorder and flags any that didn't start, in amber, with the reason.
 - **Program output** to an UltraStudio or DeckLink: event name, date, time of day, take length, and a row
   or tile per recorder that fills red while recording. Lays itself out for 1 to 12+ recorders.
