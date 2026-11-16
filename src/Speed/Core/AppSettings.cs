@@ -12,6 +12,8 @@ public sealed class RecorderConfig
     /// <summary>COM port or serial device for a Shogun; IP address or host name otherwise.</summary>
     public string Address { get; set; } = "";
     public bool IncludeInGroup { get; set; } = true;
+    /// <summary>Record channel on a multi-channel Shogun (1 to 4), or 0 when the cable has just one.</summary>
+    public int Channel { get; set; }
 }
 
 public sealed class AppSettings

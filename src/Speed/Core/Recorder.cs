@@ -26,7 +26,7 @@ public abstract partial class Recorder : ObservableObject
 
     public string Name => Config.Name;
     public string Address => Config.Address;
-    public string Detail => $"{ModelName} on {Address}";
+    public virtual string Detail => $"{ModelName} on {Address}";
 
     public bool IncludeInGroup
     {
