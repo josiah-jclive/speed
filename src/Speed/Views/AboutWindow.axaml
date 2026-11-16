@@ -1,0 +1,21 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="Speed.Views.AboutWindow"
+        Title="About JSPEED"
+        Width="440" SizeToContent="Height" CanResize="False"
+        WindowStartupLocation="CenterOwner" Background="{StaticResource Ground}">
+  <StackPanel Margin="40,44,40,36" HorizontalAlignment="Center">
+    <Image Source="avares://JSPEED/Assets/Icons/state-recording.png" Width="88" Height="88"
+           HorizontalAlignment="Center" />
+    <Image Source="avares://JSPEED/Assets/jspeed-by-jc-live.png" Height="56" Margin="0,24,0,0"
+           HorizontalAlignment="Center" AutomationProperties.Name="JSPEED by JC LIVE" />
+    <TextBlock x:Name="VersionText" Text="Version 1.0.0" Classes="muted" FontSize="14"
+               HorizontalAlignment="Center" Margin="0,18,0,0" />
+    <TextBlock Text="Record control for live production." FontSize="15" Foreground="{StaticResource Text2}"
+               HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap" Margin="0,22,0,0" />
+    <Button Classes="link" Content="www.jc.live" Click="OpenWebsite" FontSize="15"
+            HorizontalAlignment="Center" Margin="0,14,0,0" />
+    <TextBlock x:Name="CopyrightText" Text="© JC Live" Classes="muted" FontSize="12"
+               HorizontalAlignment="Center" Margin="0,26,0,0" />
+  </StackPanel>
+</Window>

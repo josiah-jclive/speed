@@ -25,6 +25,7 @@
                        Foreground="{StaticResource Text2}" LetterSpacing="0.24" />
             <TextBlock x:Name="VersionText" Text="1.0" FontSize="12" Foreground="{StaticResource Dim}" />
           </StackPanel>
+          <Button Classes="link" Content="About JSPEED" Click="ShowAbout" FontSize="12" HorizontalAlignment="Center" />
         </StackPanel>
       </Grid>
     </Border>

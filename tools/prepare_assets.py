@@ -104,7 +104,7 @@ def make_logo() -> None:
 
     src = ROOT / "packaging/JSPEED-by-JC-LIVE-white-knockout.svg"
     dest = ROOT / "src/Speed/Assets/jspeed-by-jc-live.png"
-    cairosvg.svg2png(url=str(src), write_to=str(dest), output_height=80)
+    cairosvg.svg2png(url=str(src), write_to=str(dest), output_height=160)
     print("rendered title-bar logo")
 
 

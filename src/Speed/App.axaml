@@ -3,6 +3,14 @@
              x:Class="Speed.App"
              Name="JSPEED"
              RequestedThemeVariant="Dark">
+  <!-- Mac app menu. Defining it replaces Avalonia's own "About Avalonia" item;
+       macOS still adds Services, Hide and Quit. -->
+  <NativeMenu.Menu>
+    <NativeMenu>
+      <NativeMenuItem Header="About JSPEED" Click="AboutClicked" />
+    </NativeMenu>
+  </NativeMenu.Menu>
+
   <Application.Styles>
     <FluentTheme />
     <StyleInclude Source="avares://JSPEED/Styles/Theme.axaml" />

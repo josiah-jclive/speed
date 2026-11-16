@@ -26,5 +26,7 @@ public partial class SettingsWindow : Window
         ShortcutsPage.IsVisible = i == 3;
     }
 
+    private void ShowAbout(object? sender, RoutedEventArgs e) => AboutWindow.ShowFor(this);
+
     private void Done(object? sender, RoutedEventArgs e) => Close();
 }

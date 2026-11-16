@@ -16,4 +16,10 @@ public partial class App : Application
             desktop.MainWindow = new MainWindow { DataContext = new MainViewModel() };
         base.OnFrameworkInitializationCompleted();
     }
+
+    private void AboutClicked(object? sender, EventArgs e)
+    {
+        var owner = (ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)?.MainWindow;
+        AboutWindow.ShowFor(owner);
+    }
 }
