@@ -89,7 +89,7 @@ struct Mode {
     int width = 0, height = 0;
     BMDTimeValue duration = 0;
     BMDTimeScale scale = 0;
-    BMDDisplayMode id = 0;
+    BMDDisplayMode id = BMDDisplayMode(0);
 };
 
 struct Device {
@@ -295,7 +295,7 @@ SPD_API int spd_init(void)
                 m.id = mode->GetDisplayMode();
 
                 DLBool supported = false;
-                BMDDisplayMode actual = 0;
+                BMDDisplayMode actual = BMDDisplayMode(0);
                 if (output->DoesSupportVideoMode(bmdVideoConnectionUnspecified, m.id, bmdFormat8BitBGRA,
                                                  bmdNoVideoOutputConversion, bmdSupportedVideoModeDefault,
                                                  &actual, &supported) == S_OK && supported)
