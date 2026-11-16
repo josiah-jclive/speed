@@ -1,0 +1,107 @@
+name: Build JSPEED
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  assets:
+    name: Fonts, icons and SDK headers
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Fetch and generate
+        run: |
+          pip install pillow cairosvg
+          python tools/prepare_assets.py
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: prepared-assets
+          if-no-files-found: error
+          path: |
+            native/speed_decklink/sdk
+            src/Speed/Assets/Fonts
+            src/Speed/Assets/Icons
+            src/Speed/Assets/jspeed-by-jc-live.png
+            packaging/icon-1024.png
+            packaging/mac/JSPEED.icns
+
+  windows:
+    name: Windows (.exe)
+    needs: assets
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: prepared-assets
+          path: .
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Set up the Visual Studio compiler
+        uses: ilammy/msvc-dev-cmd@v1
+
+      - name: Build the DeckLink bridge
+        run: |
+          cmake -S native/speed_decklink -B native/build -G Ninja -DCMAKE_BUILD_TYPE=Release
+          cmake --build native/build
+
+      - name: Publish JSPEED.exe
+        run: >
+          dotnet publish src/Speed/Speed.csproj -c Release -r win-x64 --self-contained true
+          -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -o out/JSPEED
+
+      - name: Add the bridge next to the exe
+        shell: pwsh
+        run: Copy-Item native/build/speed_decklink.dll out/JSPEED/
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: JSPEED-Windows
+          path: out/JSPEED
+
+  macos:
+    name: macOS (.dmg, ${{ matrix.rid }})
+    needs: assets
+    runs-on: macos-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        rid: [osx-arm64, osx-x64]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: prepared-assets
+          path: .
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Build the DeckLink bridge (universal)
+        run: |
+          cmake -S native/speed_decklink -B native/build -DCMAKE_BUILD_TYPE=Release
+          cmake --build native/build --config Release
+
+      - name: Build JSPEED.app and the .dmg
+        run: |
+          chmod +x packaging/mac/build-dmg.sh
+          packaging/mac/build-dmg.sh ${{ matrix.rid }}
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: JSPEED-macOS-${{ matrix.rid }}
+          path: artifacts/${{ matrix.rid }}/JSPEED-${{ matrix.rid }}.dmg
