@@ -13,7 +13,7 @@ public partial class SettingsWindow : Window
         InitializeComponent();
         if (model != null) DataContext = model.Settings;
         var version = typeof(SettingsWindow).Assembly.GetName().Version;
-        if (version != null) VersionText.Text = $"{version.Major}.{version.Minor}";
+        if (version != null) VersionText.Text = $"{version.Major}.{version.Minor}.{Math.Max(0, version.Build)}";
     }
 
     private void NavChanged(object? sender, SelectionChangedEventArgs e)

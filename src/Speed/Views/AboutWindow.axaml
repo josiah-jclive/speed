@@ -9,7 +9,7 @@
            HorizontalAlignment="Center" />
     <Image Source="avares://JSPEED/Assets/jspeed-by-jc-live.png" Height="56" Margin="0,24,0,0"
            HorizontalAlignment="Center" AutomationProperties.Name="JSPEED by JC LIVE" />
-    <TextBlock x:Name="VersionText" Text="Version 1.0.0" Classes="muted" FontSize="14"
+    <TextBlock x:Name="VersionText" Text="Version 1.0.4" Classes="muted" FontSize="14"
                HorizontalAlignment="Center" Margin="0,18,0,0" />
     <TextBlock Text="Record control for live production." FontSize="15" Foreground="{StaticResource Text2}"
                HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap" Margin="0,22,0,0" />
