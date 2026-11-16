@@ -1,7 +1,9 @@
 using System.Collections.Specialized;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Interactivity;
+using Avalonia.Media;
 using Avalonia.Platform;
 using Avalonia.Threading;
 using Speed.Core;
@@ -21,6 +23,35 @@ public partial class MainWindow : Window
             (_, _) => Preview.InvalidateVisual());
         _previewTimer.Start();
         AppLog.Entries.CollectionChanged += OnLogChanged;
+        SetUpStopHold();
+    }
+
+    /// <summary>How long Stop all must be held before it fires.</summary>
+    public static readonly TimeSpan StopHoldTime = TimeSpan.FromSeconds(1.5);
+
+    private void SetUpStopHold()
+    {
+        // App-level brushes from Theme.axaml; the window isn't in the tree yet, so ask the app.
+        IBrush Res(string key) => (IBrush)Application.Current!.FindResource(key)!;
+        StopHold.HoldTime = StopHoldTime;
+        StopHold.IdleText = "Stop all";
+        StopHold.HintText = "Hold";
+        StopHold.HoldingText = "Stopping";
+        StopHold.DoneText = "Stopped";
+        StopHold.ShowStopIcon = true;
+        StopHold.UseFKey = false;
+        StopHold.ResetAfterComplete = true;
+        StopHold.LabelSize = 18;
+        StopHold.Accent = Res("Text");
+        StopHold.IdleBackground = Res("Panel2");
+        StopHold.IdleBorder = Res("Line2");
+        StopHold.IdleForeground = Res("Text");
+        StopHold.OnAccentForeground = Res("Ground");
+        StopHold.Completed += async (_, _) =>
+        {
+            if (Model is { } vm) await vm.StopAllCommand.ExecuteAsync(null);
+        };
+        StopHold.Reset();
     }
 
     private MainViewModel? Model => DataContext as MainViewModel;

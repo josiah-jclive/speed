@@ -91,16 +91,16 @@
           <!-- Shortcuts -->
           <StackPanel x:Name="ShortcutsPage" Spacing="16" IsVisible="False">
             <TextBlock Text="Keyboard shortcuts" FontSize="22" FontWeight="SemiBold" />
-            <Grid ColumnDefinitions="90,*" RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="12">
+            <Grid ColumnDefinitions="90,*" RowDefinitions="Auto,Auto,Auto" RowSpacing="12">
               <TextBlock Text="F7" Classes="mono" />
               <TextBlock Grid.Column="1" Text="Arm or disarm record" />
               <TextBlock Grid.Row="1" Text="F9" Classes="mono" />
               <TextBlock Grid.Row="1" Grid.Column="1" Text="Record all (when armed)" />
-              <TextBlock Grid.Row="2" Text="F8" Classes="mono" />
-              <TextBlock Grid.Row="2" Grid.Column="1" Text="Stop all" />
-              <TextBlock Grid.Row="3" Text="Hold F" Classes="mono" />
-              <TextBlock Grid.Row="3" Grid.Column="1" Text="Confirm a format, on its last step" />
+              <TextBlock Grid.Row="2" Text="Hold F" Classes="mono" />
+              <TextBlock Grid.Row="2" Grid.Column="1" Text="Confirm a format, on its last step" />
             </Grid>
+            <TextBlock Classes="muted" TextWrapping="Wrap"
+                       Text="Stop all has no shortcut, so a stray key press can't end a take. Press and hold the Stop all button for 1.5 seconds." />
             <TextBlock Classes="muted" TextWrapping="Wrap"
                        Text="On a Mac keyboard, hold fn with the function keys unless they're set to work as standard function keys." />
           </StackPanel>
