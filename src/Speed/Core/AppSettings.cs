@@ -33,6 +33,8 @@ public sealed class AppSettings
     public string? OutputDevice { get; set; }
     public string? OutputMode { get; set; }
     public bool StartOutputOnLaunch { get; set; }
+    /// <summary>Windows only: open JSPEED when the user signs in.</summary>
+    public bool StartWithWindows { get; set; }
 
     public List<RecorderConfig> Recorders { get; set; } = new();
 

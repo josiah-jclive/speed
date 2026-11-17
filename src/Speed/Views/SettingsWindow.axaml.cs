@@ -14,6 +14,7 @@ public partial class SettingsWindow : Window
         if (model != null) DataContext = model.Settings;
         var version = typeof(SettingsWindow).Assembly.GetName().Version;
         if (version != null) VersionText.Text = $"{version.Major}.{version.Minor}.{Math.Max(0, version.Build)}";
+        StartupSection.IsVisible = OperatingSystem.IsWindows();
     }
 
     private void NavChanged(object? sender, SelectionChangedEventArgs e)

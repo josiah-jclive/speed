@@ -22,6 +22,7 @@ public sealed partial class MainViewModel : ObservableObject, IOutputSource
         Recorders.CollectionChanged += (_, _) => OnPropertyChanged(nameof(HasNoRecorders));
         foreach (var config in Settings.Recorders) Attach(RecorderFactory.Create(config));
         _status = GroupStatus.Compute(Recorders);
+        StartupRegistration.Apply(Settings.StartWithWindows);
 
         _timer = new DispatcherTimer(TimeSpan.FromMilliseconds(200), DispatcherPriority.Background, (_, _) => Refresh());
         _timer.Start();
@@ -208,6 +209,7 @@ public sealed partial class MainViewModel : ObservableObject, IOutputSource
     public void SaveSettings()
     {
         Settings.Save();
+        StartupRegistration.Apply(Settings.StartWithWindows);
         OnPropertyChanged(nameof(TitleName));
         OnPropertyChanged(nameof(RecordAllEnabled));
         OnPropertyChanged(nameof(RequireArm));

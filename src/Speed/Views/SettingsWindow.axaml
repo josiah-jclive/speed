@@ -60,6 +60,16 @@
                 <TextBlock Text="seconds" VerticalAlignment="Center" />
               </StackPanel>
             </StackPanel>
+            <!-- Windows only; hidden on macOS, which uses Login Items instead. -->
+            <StackPanel x:Name="StartupSection" Spacing="26">
+              <Border Height="1" Background="{StaticResource Line}" />
+              <StackPanel Spacing="10">
+                <TextBlock Text="Startup" FontWeight="Medium" />
+                <CheckBox IsChecked="{Binding StartWithWindows}" Content="Start JSPEED when Windows starts" />
+                <TextBlock Classes="muted" TextWrapping="Wrap"
+                           Text="With &#8220;Start output when JSPEED opens&#8221; also on, this PC comes back on its own after a restart or power cut: JSPEED opens, reconnects to every recorder and starts the program output. Keep JSPEED.exe in a permanent folder before turning this on." />
+              </StackPanel>
+            </StackPanel>
           </StackPanel>
 
           <!-- Program output -->
