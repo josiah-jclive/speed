@@ -74,7 +74,7 @@ jobs:
   macos:
     name: macOS (.dmg, ${{ matrix.rid }})
     needs: assets
-    runs-on: macos-latest
+    runs-on: macos-15-intel
     strategy:
       fail-fast: false
       matrix:
