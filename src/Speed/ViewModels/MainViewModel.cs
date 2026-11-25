@@ -21,6 +21,8 @@ public sealed partial class MainViewModel : ObservableObject, IOutputSource
         Settings = AppSettings.Load();
         Recorders.CollectionChanged += (_, _) => OnPropertyChanged(nameof(HasNoRecorders));
         foreach (var config in Settings.Recorders) Attach(RecorderFactory.Create(config));
+        Encoders.CollectionChanged += (_, _) => OnPropertyChanged(nameof(HasEncoders));
+        foreach (var config in Settings.Encoders) AttachEncoder(new StreamingEncoder(config));
         _status = GroupStatus.Compute(Recorders);
         StartupRegistration.Apply(Settings.StartWithWindows);
 
@@ -35,6 +37,8 @@ public sealed partial class MainViewModel : ObservableObject, IOutputSource
     public ObservableCollection<Recorder> Recorders { get; } = new();
     public ObservableCollection<LogEntry> Log => AppLog.Entries;
     public bool HasNoRecorders => Recorders.Count == 0;
+    public ObservableCollection<StreamingEncoder> Encoders { get; } = new();
+    public bool HasEncoders => Encoders.Count > 0;
 
     // ---------- Group status ----------
 
@@ -71,6 +75,7 @@ public sealed partial class MainViewModel : ObservableObject, IOutputSource
     public bool ShowTimeOfDay => Settings.ShowTimeOfDay;
     public bool ShowDate => Settings.ShowDate;
     public IReadOnlyList<Recorder> OutputRecorders => Recorders;
+    public IReadOnlyList<StreamingEncoder> OutputEncoders => Encoders;
 
     private void Refresh()
     {
@@ -229,6 +234,39 @@ public sealed partial class MainViewModel : ObservableObject, IOutputSource
         recorder.Start();
     }
 
+    // ---------- Encoders ----------
+
+    public void AddEncoder(EncoderConfig config)
+    {
+        Settings.Encoders.Add(config);
+        Settings.Save();
+        AttachEncoder(new StreamingEncoder(config));
+        AppLog.Info($"Added encoder {config.Name}.");
+    }
+
+    public async Task UpdateEncoderAsync(StreamingEncoder encoder, EncoderConfig edited)
+    {
+        await encoder.ApplyAsync(edited);
+        Settings.Save();
+        AppLog.Info($"Updated encoder {encoder.Name}: {edited.Keys.Count} stream key{(edited.Keys.Count == 1 ? "" : "s")}.");
+    }
+
+    public async Task RemoveEncoderAsync(StreamingEncoder encoder)
+    {
+        Encoders.Remove(encoder);
+        Settings.Encoders.Remove(encoder.Config);
+        Settings.Save();
+        await encoder.ShutdownAsync();
+        AppLog.Info($"Removed encoder {encoder.Name}.");
+    }
+
+    private void AttachEncoder(StreamingEncoder encoder)
+    {
+        encoder.ConfigChanged += Settings.Save;
+        Encoders.Add(encoder);
+        encoder.Start();
+    }
+
     public void SaveSettings()
     {
         Settings.Save();
@@ -330,7 +368,8 @@ public sealed partial class MainViewModel : ObservableObject, IOutputSource
         _timer.Stop();
         StopOutput();
         DeckLinkOutput.Shutdown();
-        await Task.WhenAll(Recorders.Select(r => r.ShutdownAsync()));
+        await Task.WhenAll(Recorders.Select(r => r.ShutdownAsync())
+            .Concat(Encoders.Select(e => e.ShutdownAsync())));
         Settings.Save();
     }
 }

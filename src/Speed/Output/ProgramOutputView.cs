@@ -4,6 +4,7 @@ using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Media.Immutable;
 using Speed.Core;
+using Speed.Devices;
 
 namespace Speed.Output;
 
@@ -17,6 +18,7 @@ public interface IOutputSource
     string TakeLengthText { get; }
     GroupStatus Status { get; }
     IReadOnlyList<Recorder> OutputRecorders { get; }
+    IReadOnlyList<StreamingEncoder> OutputEncoders { get; }
 }
 
 /// <summary>
@@ -35,6 +37,8 @@ public sealed class ProgramOutputView : Control
     private static readonly Typeface SansMedium = new(Sans, FontStyle.Normal, FontWeight.Medium);
     private static readonly Typeface SansBold = new(Sans, FontStyle.Normal, FontWeight.Bold);
     private static readonly Typeface MonoRegular = new(Mono, FontStyle.Normal, FontWeight.Normal);
+    // The JSPEED lockup face, for the ON AIR block.
+    private static readonly Typeface BrandSemi = new(new FontFamily("avares://JSPEED/Assets/Fonts#Poppins"), FontStyle.Normal, FontWeight.SemiBold);
 
     private static IBrush B(string hex) => new ImmutableSolidColorBrush(Color.Parse(hex));
     private static readonly IBrush Black = B("#000000");
@@ -51,6 +55,7 @@ public sealed class ProgramOutputView : Control
     private static readonly IBrush TrackOnRed = B("#40FFFFFF");
     private static readonly IBrush TrackOnDark = B("#33383F");
     private static readonly IBrush Dim = B("#7D8592");
+    private static readonly IBrush OnAmberSub = B("#3A2A0E");
 
     public override void Render(DrawingContext context)
     {
@@ -158,9 +163,18 @@ public sealed class ProgramOutputView : Control
             if (subTake != null) dc.DrawText(subTake, new Point(left + sub.Width, ty));
         }
 
+        // ---- ON AIR bar along the bottom, when any encoders are set up ----
+        double areaBottom = bottom;
+        if (StreamSummary.Compute(src.OutputEncoders) is { } stream)
+        {
+            const double barH = 96;
+            DrawStreamBar(dc, new Rect(left, bottom - barH, right - left, barH), stream);
+            areaBottom = bottom - barH - 18;
+        }
+
         // ---- Recorders ----
         double areaTop = top + headerH + 22;
-        var area = new Rect(left, areaTop, right - left, bottom - areaTop);
+        var area = new Rect(left, areaTop, right - left, areaBottom - areaTop);
         if (recorders.Count == 0)
         {
             var empty = Text("Add a recorder in JSPEED to show its status here.", SansMedium, 36, Muted);
@@ -270,6 +284,61 @@ public sealed class ProgramOutputView : Control
             }
         }
     }
+
+    /// <summary>
+    /// The ON AIR bar: an ON AIR block in the JSPEED lockup style (red letters on white) on a red
+    /// bar, then the stream's name from the key table, then duration and bitrate on the right.
+    /// Amber when connecting, interrupted, on an unknown key or split; dark with an outlined
+    /// OFF AIR when nothing is streaming.
+    /// </summary>
+    private static void DrawStreamBar(DrawingContext dc, Rect r, StreamSummary s)
+    {
+        var (bg, fg, sub) = s.Level switch
+        {
+            StreamLevel.OnAir => (RecRed, White, RecSub),
+            StreamLevel.Warning => (Amber, OnAmber, OnAmberSub),
+            _ => (RowIdle, Dim, Muted),
+        };
+        double h = r.Height;
+        dc.DrawRectangle(bg, null, r, 18, 18);
+
+        // ON AIR / OFF AIR block
+        bool live = s.IsLive;
+        var word = Text(live ? "ON AIR" : "OFF AIR", BrandSemi, h * 0.42, live ? bg : Dim);
+        double blockH = h * 0.62, padX = h * 0.22;
+        var block = new Rect(r.X + h * 0.19, r.Center.Y - blockH / 2, word.Width + padX * 2, blockH);
+        double radius = blockH * 0.12;
+        if (live) dc.DrawRectangle(White, null, block, radius, radius);
+        else dc.DrawRectangle(null, new Pen(Dim, 3), block.Deflate(1.5), radius, radius);
+        dc.DrawText(word, new Point(block.X + padX, block.Center.Y - word.Height / 2));
+
+        // Duration and bitrate, right-aligned
+        double x = r.Right - h * 0.36;
+        if (s.Bitrate is { } rate)
+        {
+            var t = Text(rate, SansSemi, h * 0.22, sub);
+            x -= t.Width;
+            dc.DrawText(t, new Point(x, r.Center.Y - t.Height / 2 + h * 0.03));
+            x -= 28;
+        }
+        if (s.Duration is { } dur)
+        {
+            var t = Text(dur, MonoRegular, h * 0.44, fg);
+            x -= t.Width;
+            dc.DrawText(t, new Point(x, r.Center.Y - t.Height / 2));
+            x -= 28;
+        }
+
+        // Stream name and the line under it
+        double tx = block.Right + h * 0.3, maxW = Math.Max(80, x - tx - 12);
+        var title = Text(s.Title, SansSemi, h * 0.36, live ? fg : Text2Off, maxW);
+        var line = Text(s.Subtitle, SansMedium, h * 0.19, sub, maxW);
+        double ty = r.Center.Y - (title.Height + line.Height) / 2;
+        dc.DrawText(title, new Point(tx, ty));
+        dc.DrawText(line, new Point(tx, ty + title.Height));
+    }
+
+    private static readonly IBrush Text2Off = B("#C3C9D3");
 
     /// <summary>Fill bar (when the device reports a fraction) plus the time or percent left. Returns the width drawn.</summary>
     private static double DrawMedia(DrawingContext dc, Recorder r, double x, double centerY, double width, double size,
