@@ -16,6 +16,37 @@ public sealed class RecorderConfig
     public int Channel { get; set; }
 }
 
+/// <summary>One stream key an encoder might be using, and the name to show for it.</summary>
+public sealed class StreamKeyEntry
+{
+    private string? _plain;
+
+    public string Name { get; set; } = "";
+
+    /// <summary>The key as saved: encrypted on Windows (see <see cref="KeyProtection"/>).</summary>
+    public string StoredKey { get; set; } = "";
+
+    [JsonIgnore]
+    public string Key
+    {
+        get => _plain ??= KeyProtection.Unprotect(StoredKey);
+        set
+        {
+            _plain = value.Trim();
+            StoredKey = KeyProtection.Protect(_plain);
+        }
+    }
+}
+
+/// <summary>A Blackmagic Streaming Encoder HD or 4K, watched over the network.</summary>
+public sealed class EncoderConfig
+{
+    public string Name { get; set; } = "";
+    /// <summary>IP address or host name.</summary>
+    public string Address { get; set; } = "";
+    public List<StreamKeyEntry> Keys { get; set; } = new();
+}
+
 public sealed class AppSettings
 {
     public string ProductionName { get; set; } = "";
@@ -37,6 +68,7 @@ public sealed class AppSettings
     public bool StartWithWindows { get; set; }
 
     public List<RecorderConfig> Recorders { get; set; } = new();
+    public List<EncoderConfig> Encoders { get; set; } = new();
 
     [JsonIgnore]
     public static string Folder
