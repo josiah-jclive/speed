@@ -10,7 +10,7 @@
     <RootNamespace>Speed</RootNamespace>
     <Product>JSPEED</Product>
     <Company>JC Live</Company>
-    <Version>1.0.4</Version>
+    <Version>1.0.5</Version>
     <ApplicationIcon>Assets/Icons/app.ico</ApplicationIcon>
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
     <BuiltInComInteropSupport>false</BuiltInComInteropSupport>
