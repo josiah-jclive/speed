@@ -199,6 +199,29 @@ public sealed partial class MainViewModel : ObservableObject, IOutputSource
         AppLog.Info($"Removed {recorder.Name}.");
     }
 
+    public void RenameRecorder(Recorder recorder, string name)
+    {
+        var old = recorder.Name;
+        recorder.Name = name;
+        if (recorder.Name != old) AppLog.Info($"Renamed {old} to {recorder.Name}.");
+    }
+
+    /// <summary>
+    /// Moves a recorder in the list. The order is the order of the cards and of the
+    /// rows or tiles on the program output, and it's saved.
+    /// </summary>
+    public void MoveRecorder(Recorder recorder, int to)
+    {
+        int from = Recorders.IndexOf(recorder);
+        if (from < 0) return;
+        to = Math.Clamp(to, 0, Recorders.Count - 1);
+        if (from == to) return;
+        Recorders.Move(from, to);
+        Settings.Recorders.Clear();
+        Settings.Recorders.AddRange(Recorders.Select(r => r.Config));
+        Settings.Save();
+    }
+
     private void Attach(Recorder recorder)
     {
         recorder.ConfigChanged += Settings.Save;

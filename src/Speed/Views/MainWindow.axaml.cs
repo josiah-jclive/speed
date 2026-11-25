@@ -111,16 +111,37 @@ public partial class MainWindow : Window
 
     private void ShowMore(object? sender, RoutedEventArgs e)
     {
-        if (sender is not Button { Tag: Recorder recorder } button) return;
+        if (sender is not Button { Tag: Recorder recorder } button || Model is not { } vm) return;
         ToolTip.SetIsOpen(button, false);
-        var format = new MenuItem { Header = "Format media…" };
-        format.Click += async (_, _) => await FormatMediaAsync(recorder);
-        var remove = new MenuItem { Header = "Remove recorder" };
-        remove.Click += async (_, _) => await RemoveRecorderAsync(recorder);
+        int index = vm.Recorders.IndexOf(recorder), last = vm.Recorders.Count - 1;
+
+        MenuItem Item(string header, Action action, bool enabled = true)
+        {
+            var item = new MenuItem { Header = header, IsEnabled = enabled };
+            item.Click += (_, _) => action();
+            return item;
+        }
+
         var menu = new MenuFlyout { Placement = PlacementMode.BottomEdgeAlignedRight };
-        menu.Items.Add(format);
-        menu.Items.Add(remove);
+        menu.Items.Add(Item("Rename…", async () => await RenameAsync(recorder)));
+        menu.Items.Add(new Separator());
+        // Order runs left to right, top to bottom, here and on the program output.
+        menu.Items.Add(Item("Move to start", () => vm.MoveRecorder(recorder, 0), index > 0));
+        menu.Items.Add(Item("Move earlier", () => vm.MoveRecorder(recorder, index - 1), index > 0));
+        menu.Items.Add(Item("Move later", () => vm.MoveRecorder(recorder, index + 1), index < last));
+        menu.Items.Add(Item("Move to end", () => vm.MoveRecorder(recorder, last), index < last));
+        menu.Items.Add(new Separator());
+        menu.Items.Add(Item("Format media…", async () => await FormatMediaAsync(recorder)));
+        menu.Items.Add(Item("Remove recorder", async () => await RemoveRecorderAsync(recorder)));
         menu.ShowAt(button);
+    }
+
+    private async Task RenameAsync(Recorder recorder)
+    {
+        if (Model is not { } vm) return;
+        var others = vm.Recorders.Where(r => r != recorder).Select(r => r.Name);
+        var name = await new RenameWindow(recorder.Name, others).ShowDialog<string?>(this);
+        if (name != null) vm.RenameRecorder(recorder, name);
     }
 
     private async Task FormatMediaAsync(Recorder recorder)

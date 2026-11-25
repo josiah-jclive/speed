@@ -24,7 +24,19 @@ public abstract partial class Recorder : ObservableObject
     public abstract string ModelName { get; }
     public abstract bool ReportsMedia { get; }
 
-    public string Name => Config.Name;
+    /// <summary>Name on screen and on the output. Renaming saves to settings.</summary>
+    public string Name
+    {
+        get => Config.Name;
+        set
+        {
+            var name = (value ?? "").Trim();
+            if (name.Length == 0 || name == Config.Name) return;
+            Config.Name = name;
+            OnPropertyChanged();
+            ConfigChanged?.Invoke();
+        }
+    }
     public string Address => Config.Address;
     public virtual string Detail => $"{ModelName} on {Address}";
 

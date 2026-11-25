@@ -1,0 +1,22 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="Speed.Views.RenameWindow"
+        Title="Rename recorder"
+        Width="440" SizeToContent="Height" CanResize="False"
+        WindowStartupLocation="CenterOwner" Background="{StaticResource Panel}">
+  <StackPanel Margin="28" Spacing="18">
+    <TextBlock Text="Rename recorder" FontSize="22" FontWeight="SemiBold" />
+    <StackPanel Spacing="8">
+      <TextBlock Text="Name on screen and on the program output" Classes="muted" />
+      <TextBox x:Name="NameBox" Height="44" VerticalContentAlignment="Center" />
+      <TextBlock x:Name="ErrorText" Foreground="{StaticResource AmberText}" FontSize="13" IsVisible="False"
+                 TextWrapping="Wrap" />
+    </StackPanel>
+    <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Right">
+      <Button Classes="quiet" Content="Cancel" Height="44" Padding="20,0" VerticalContentAlignment="Center"
+              Click="Cancel" IsCancel="True" />
+      <Button Classes="primary" Content="Rename" Height="44" VerticalContentAlignment="Center"
+              Click="Save" IsDefault="True" />
+    </StackPanel>
+  </StackPanel>
+</Window>
