@@ -4,6 +4,7 @@
         xmlns:core="using:Speed.Core"
         xmlns:out="using:Speed.Output"
         xmlns:views="using:Speed.Views"
+        xmlns:dev="using:Speed.Devices"
         x:Class="Speed.Views.MainWindow"
         x:DataType="vm:MainViewModel"
         Title="JSPEED"
@@ -47,6 +48,33 @@
     </Style>
     <Style Selector="TextBlock.recSub">
       <Setter Property="Foreground" Value="{StaticResource Muted}" />
+    </Style>
+    <!-- ON AIR block on encoder cards: the JSPEED lockup, red letters on white when live, outlined when not. -->
+    <Style Selector="Border.airblock">
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="BorderBrush" Value="{StaticResource Dim}" />
+      <Setter Property="BorderThickness" Value="2" />
+      <Setter Property="CornerRadius" Value="4" />
+      <Setter Property="Padding" Value="9,0" />
+      <Setter Property="Height" Value="30" />
+      <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+    <Style Selector="Border.airblock.on">
+      <Setter Property="Background" Value="White" />
+      <Setter Property="BorderThickness" Value="0" />
+    </Style>
+    <Style Selector="TextBlock.airword">
+      <Setter Property="FontFamily" Value="{StaticResource BrandFont}" />
+      <Setter Property="FontWeight" Value="SemiBold" />
+      <Setter Property="FontSize" Value="17" />
+      <Setter Property="Foreground" Value="{StaticResource Dim}" />
+      <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+    <Style Selector="TextBlock.airword.on">
+      <Setter Property="Foreground" Value="{StaticResource Rec}" />
+    </Style>
+    <Style Selector="TextBlock.airword.on.warn">
+      <Setter Property="Foreground" Value="{StaticResource Amber}" />
     </Style>
   </Window.Styles>
 
@@ -114,11 +142,85 @@
 
     <Grid Grid.Row="2" ColumnDefinitions="*,400" Margin="24" ColumnSpacing="24">
 
-      <!-- Recorders -->
-      <Grid RowDefinitions="Auto,*" RowSpacing="14">
-        <Grid ColumnDefinitions="*,Auto">
+      <!-- Encoders, then recorders -->
+      <Grid RowDefinitions="Auto,Auto,*">
+        <StackPanel Spacing="14" Margin="0,0,0,10" IsVisible="{Binding HasEncoders}">
+          <TextBlock Text="Encoders" Classes="h2" />
+          <ItemsControl ItemsSource="{Binding Encoders}">
+            <ItemsControl.ItemsPanel>
+              <ItemsPanelTemplate>
+                <UniformGrid Columns="2" />
+              </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="dev:StreamingEncoder">
+                <Border Classes="recorder" Margin="0,0,14,14"
+                        Classes.recording="{Binding IsOnAir}" Classes.failed="{Binding IsWarning}">
+                  <Grid RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="12">
+                    <Grid ColumnDefinitions="*,Auto">
+                      <StackPanel Spacing="3">
+                        <TextBlock Text="{Binding Name}" FontSize="18" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
+                        <TextBlock Text="{Binding DetailText}" Classes="muted" />
+                      </StackPanel>
+                      <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="7" VerticalAlignment="Top" Margin="0,4,0,0">
+                        <Ellipse Width="7" Height="7" Classes="link" Classes.online="{Binding IsOnline}" VerticalAlignment="Center" />
+                        <TextBlock Text="{Binding LinkText}" Classes="muted" />
+                      </StackPanel>
+                    </Grid>
+
+                    <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="14">
+                      <Border Classes="airblock" Classes.on="{Binding IsLive}">
+                        <TextBlock Text="{Binding AirWord}" Classes="airword" Classes.on="{Binding IsLive}"
+                                   Classes.warn="{Binding IsWarning}" />
+                      </Border>
+                      <TextBlock Text="{Binding StreamName}" FontSize="24" FontWeight="SemiBold" VerticalAlignment="Center"
+                                 TextTrimming="CharacterEllipsis" />
+                    </StackPanel>
+
+                    <Grid Grid.Row="2" ColumnDefinitions="*,*,*">
+                      <StackPanel Spacing="2">
+                        <TextBlock Text="Duration" Classes="muted" />
+                        <TextBlock Text="{Binding DurationText}" Classes="mono" FontSize="20" />
+                      </StackPanel>
+                      <StackPanel Grid.Column="1" Spacing="2">
+                        <TextBlock Text="Bitrate" Classes="muted" />
+                        <TextBlock Text="{Binding BitrateText}" FontSize="15" FontWeight="SemiBold" Margin="0,3,0,0" />
+                      </StackPanel>
+                      <StackPanel Grid.Column="2" Spacing="2">
+                        <TextBlock Text="Cache" Classes="muted" />
+                        <TextBlock Text="{Binding CacheText}" FontSize="15" FontWeight="SemiBold" Margin="0,3,0,0" />
+                      </StackPanel>
+                    </Grid>
+
+                    <Grid Grid.Row="3" ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                      <TextBlock Text="{Binding PlatformText}" Classes="muted" VerticalAlignment="Center"
+                                 TextTrimming="CharacterEllipsis" />
+                      <Button Grid.Column="1" Classes="icon" ToolTip.Tip="More" AutomationProperties.Name="More encoder actions"
+                              Tag="{Binding}" Click="ShowEncoderMore">
+                        <StackPanel Orientation="Horizontal" Spacing="3">
+                          <Ellipse Width="4" Height="4" Fill="{StaticResource Text}" />
+                          <Ellipse Width="4" Height="4" Fill="{StaticResource Text}" />
+                          <Ellipse Width="4" Height="4" Fill="{StaticResource Text}" />
+                        </StackPanel>
+                      </Button>
+                    </Grid>
+                  </Grid>
+                </Border>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </StackPanel>
+
+        <Grid Grid.Row="1" ColumnDefinitions="*,Auto,Auto" ColumnSpacing="10" Margin="0,0,0,14">
           <TextBlock Text="Recorders" Classes="h2" VerticalAlignment="Center" />
-          <Button Grid.Column="1" Classes="quiet" Click="AddRecorder">
+          <Button Grid.Column="1" Classes="quiet" Click="AddEncoder">
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <Path Stroke="{StaticResource Text}" StrokeThickness="2" StrokeLineCap="Round" Width="12" Height="12" Stretch="Uniform"
+                    Data="M12 5 V19 M5 12 H19" VerticalAlignment="Center" />
+              <TextBlock Text="Add encoder" FontSize="13" />
+            </StackPanel>
+          </Button>
+          <Button Grid.Column="2" Classes="quiet" Click="AddRecorder">
             <StackPanel Orientation="Horizontal" Spacing="8">
               <Path Stroke="{StaticResource Text}" StrokeThickness="2" StrokeLineCap="Round" Width="12" Height="12" Stretch="Uniform"
                     Data="M12 5 V19 M5 12 H19" VerticalAlignment="Center" />
@@ -127,7 +229,7 @@
           </Button>
         </Grid>
 
-        <Border Grid.Row="1" Classes="card" Padding="32" IsVisible="{Binding HasNoRecorders}" VerticalAlignment="Top">
+        <Border Grid.Row="2" Classes="card" Padding="32" IsVisible="{Binding HasNoRecorders}" VerticalAlignment="Top">
           <StackPanel Spacing="10">
             <TextBlock Text="No recorders yet" FontSize="18" FontWeight="SemiBold" />
             <TextBlock Classes="muted" FontSize="14" TextWrapping="Wrap"
@@ -136,7 +238,7 @@
           </StackPanel>
         </Border>
 
-        <ScrollViewer Grid.Row="1" IsVisible="{Binding !HasNoRecorders}" HorizontalScrollBarVisibility="Disabled">
+        <ScrollViewer Grid.Row="2" IsVisible="{Binding !HasNoRecorders}" HorizontalScrollBarVisibility="Disabled">
           <ItemsControl ItemsSource="{Binding Recorders}">
             <ItemsControl.ItemsPanel>
               <ItemsPanelTemplate>

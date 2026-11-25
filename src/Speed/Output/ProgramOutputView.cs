@@ -163,13 +163,20 @@ public sealed class ProgramOutputView : Control
             if (subTake != null) dc.DrawText(subTake, new Point(left + sub.Width, ty));
         }
 
-        // ---- ON AIR bar along the bottom, when any encoders are set up ----
+        // ---- ON AIR bars along the bottom, one per encoder ----
         double areaBottom = bottom;
-        if (StreamSummary.Compute(src.OutputEncoders) is { } stream)
+        var streams = StreamSummary.Compute(src.OutputEncoders);
+        if (streams.Count > 0)
         {
-            const double barH = 96;
-            DrawStreamBar(dc, new Rect(left, bottom - barH, right - left, barH), stream);
-            areaBottom = bottom - barH - 18;
+            const double barGap = 12, maxStack = 360;
+            double barH = Math.Min(96, (maxStack - barGap * (streams.Count - 1)) / streams.Count);
+            double y = bottom - streams.Count * barH - (streams.Count - 1) * barGap;
+            areaBottom = y - 18;
+            foreach (var stream in streams)
+            {
+                DrawStreamBar(dc, new Rect(left, y, right - left, barH), stream);
+                y += barH + barGap;
+            }
         }
 
         // ---- Recorders ----

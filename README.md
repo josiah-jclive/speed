@@ -14,6 +14,9 @@ Runs on Windows (.exe) and macOS (.dmg) from one C# codebase built with [Avaloni
 | Blackmagic HyperDeck | Ethernet, TCP 9993 | Yes | Yes | Time left per slot | Yes (exFAT or HFS+) |
 | AJA Ki Pro | Ethernet, HTTP | Yes, if the unit lists the commands | Yes | Percent free | No (format from its web page) |
 
+It also watches **Blackmagic Streaming Encoder HD and 4K** units (Ethernet, TCP 9977). JSPEED only watches
+them; it never starts or stops a stream.
+
 ## Features
 
 - **Record all / Stop all** with an arm switch (F7 arms, F9 records). Stop all is press and hold for 1.5 seconds
@@ -22,6 +25,11 @@ Runs on Windows (.exe) and macOS (.dmg) from one C# codebase built with [Avaloni
 - **Program output** to an UltraStudio or DeckLink: event name, date, time of day, take length, and a row
   or tile per recorder that fills red while recording. Lays itself out for 1 to 12+ recorders.
 - **Media warnings** below a time or percentage you set.
+- **Encoders, on air or off air.** Each Streaming Encoder has a table of stream keys with a name for each.
+  When it goes live, JSPEED reads the key it's using and shows that name, on its card and in an ON AIR bar
+  along the bottom of the program output. Each encoder gets its own bar, so a primary and a backup on the
+  same key show as two bars. Amber means connecting, interrupted, or a key that isn't in the table.
+  Keys are stored encrypted on Windows, and only their last 4 characters are ever shown.
 - **Format media** in three steps: choose the drive, type its name to confirm, then press and hold for
   3 seconds. HyperDecks add their own prepare/confirm token on top.
 - **Record-dot app icon** that follows the group: white dot when ready, red while recording, amber when something needs attention.
@@ -116,7 +124,7 @@ JSPEED was written without access to the hardware, so check these on the bench b
 tools/                prepare_assets.py: fetches SDK headers and fonts, draws icons and logo
 src/Speed/            the app (Avalonia, C#)
   Core/               settings, recorder base, group status, log
-  Devices/            Shogun (Sony 9-pin), HyperDeck (TCP), Ki Pro (HTTP)
+  Devices/            Shogun (Sony 9-pin), HyperDeck (TCP), Ki Pro (HTTP), Streaming Encoder (TCP)
   Output/             program output graphic and DeckLink interop
   Views/              windows and the press-and-hold button
 native/speed_decklink/ C++ bridge to the DeckLink SDK (Windows COM, macOS CFPlugin)

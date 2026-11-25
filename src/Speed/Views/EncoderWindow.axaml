@@ -1,0 +1,54 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="Speed.Views.EncoderWindow"
+        Title="Add encoder"
+        Width="660" SizeToContent="Height" CanResize="False"
+        WindowStartupLocation="CenterOwner" Background="{StaticResource Panel}">
+  <StackPanel Margin="28" Spacing="20">
+    <TextBlock x:Name="Heading" Text="Add encoder" FontSize="22" FontWeight="SemiBold" />
+
+    <StackPanel Spacing="8">
+      <TextBlock Text="Name on screen" Classes="muted" />
+      <TextBox x:Name="NameBox" Watermark="For example, Encoder A (primary)" Height="44" VerticalContentAlignment="Center" />
+    </StackPanel>
+
+    <StackPanel Spacing="8">
+      <TextBlock Text="IP address of the Streaming Encoder HD or 4K" Classes="muted" />
+      <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+        <TextBox x:Name="AddressBox" Watermark="For example, 10.0.1.41" Height="44" VerticalContentAlignment="Center"
+                 FontFamily="{StaticResource MonoFont}" />
+        <Button Grid.Column="1" x:Name="TestButton" Classes="quiet" Content="Test connection" Height="44"
+                Click="TestConnection" />
+      </Grid>
+      <TextBlock x:Name="TestResult" FontSize="13" TextWrapping="Wrap" IsVisible="False" />
+    </StackPanel>
+
+    <StackPanel Spacing="10">
+      <TextBlock Text="Stream keys" FontWeight="Medium" />
+      <TextBlock Classes="muted" TextWrapping="Wrap"
+                 Text="When the encoder goes live, JSPEED shows the name of the key it's using, on the encoder's card and on the program output." />
+      <Grid ColumnDefinitions="*,*,38" ColumnSpacing="10" Margin="0,4,0,0">
+        <TextBlock Text="Name" Classes="muted" />
+        <TextBlock Grid.Column="1" Text="Stream key" Classes="muted" />
+      </Grid>
+      <ScrollViewer MaxHeight="300" HorizontalScrollBarVisibility="Disabled">
+        <StackPanel x:Name="KeyRows" Spacing="8" />
+      </ScrollViewer>
+      <TextBlock x:Name="NoKeys" Classes="muted" Text="No stream keys yet." />
+      <StackPanel Orientation="Horizontal" Spacing="10">
+        <Button Classes="quiet" Content="Add key" Click="AddKey" />
+        <Button x:Name="CurrentKeyButton" Classes="quiet" Content="Add the encoder's current key" Click="AddCurrentKey" />
+      </StackPanel>
+      <TextBlock x:Name="KeyNote" Classes="muted" FontSize="12" TextWrapping="Wrap" />
+    </StackPanel>
+
+    <TextBlock x:Name="ErrorText" Foreground="{StaticResource AmberText}" FontSize="13" IsVisible="False" TextWrapping="Wrap" />
+
+    <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Right">
+      <Button Classes="quiet" Content="Cancel" Height="44" Padding="20,0" VerticalContentAlignment="Center"
+              Click="Cancel" IsCancel="True" />
+      <Button x:Name="SaveButton" Classes="primary" Content="Add encoder" Height="44" VerticalContentAlignment="Center"
+              Click="Save" />
+    </StackPanel>
+  </StackPanel>
+</Window>

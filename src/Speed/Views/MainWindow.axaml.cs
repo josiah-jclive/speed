@@ -7,6 +7,7 @@ using Avalonia.Media;
 using Avalonia.Platform;
 using Avalonia.Threading;
 using Speed.Core;
+using Speed.Devices;
 using Speed.ViewModels;
 
 namespace Speed.Views;
@@ -107,6 +108,33 @@ public partial class MainWindow : Window
         var configs = await new AddRecorderWindow().ShowDialog<List<RecorderConfig>?>(this);
         if (configs == null) return;
         foreach (var config in configs) vm.AddRecorder(config);
+    }
+
+    private async void AddEncoder(object? sender, RoutedEventArgs e)
+    {
+        if (Model is not { } vm) return;
+        var config = await new EncoderWindow(null, vm.Encoders.Select(x => x.Name)).ShowDialog<EncoderConfig?>(this);
+        if (config != null) vm.AddEncoder(config);
+    }
+
+    private void ShowEncoderMore(object? sender, RoutedEventArgs e)
+    {
+        if (sender is not Button { Tag: StreamingEncoder encoder } button || Model is not { } vm) return;
+        ToolTip.SetIsOpen(button, false);
+        var edit = new MenuItem { Header = "Stream keys and settings…" };
+        edit.Click += async (_, _) =>
+        {
+            var others = vm.Encoders.Where(x => x != encoder).Select(x => x.Name);
+            var edited = await new EncoderWindow(encoder.Config, others).ShowDialog<EncoderConfig?>(this);
+            if (edited != null) await vm.UpdateEncoderAsync(encoder, edited);
+        };
+        var remove = new MenuItem { Header = "Remove encoder" };
+        remove.Click += async (_, _) => await vm.RemoveEncoderAsync(encoder);
+        var menu = new MenuFlyout { Placement = PlacementMode.BottomEdgeAlignedRight };
+        menu.Items.Add(edit);
+        menu.Items.Add(new Separator());
+        menu.Items.Add(remove);
+        menu.ShowAt(button);
     }
 
     private void ShowMore(object? sender, RoutedEventArgs e)
